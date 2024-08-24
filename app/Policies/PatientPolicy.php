@@ -29,7 +29,7 @@ class PatientPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->hasRole('patient');
     }
 
     /**
@@ -37,7 +37,8 @@ class PatientPolicy
      */
     public function update(User $user, Patient $patient): bool
     {
-        //
+        return $user->hasRole('patient') && $user->patient->id === $patient->id;
+
     }
 
     /**
@@ -45,7 +46,8 @@ class PatientPolicy
      */
     public function delete(User $user, Patient $patient): bool
     {
-        //
+        return $user->hasRole('patient') && $user->patient->id === $patient->id;
+
     }
 
     /**

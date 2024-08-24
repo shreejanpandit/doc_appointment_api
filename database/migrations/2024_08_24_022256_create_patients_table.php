@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->date('dob');
-            $table->integer('age');
             $table->string('image')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->default('male');
             $table->timestamps();

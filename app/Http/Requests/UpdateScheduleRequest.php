@@ -25,7 +25,8 @@ class UpdateScheduleRequest extends FormRequest
         return [
             'start_time' =>  ['required', 'date_format:H:i'],
             'end_time' =>  ['required', 'date_format:H:i'],
-            'week_day' => ['required', Rule::in(['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Sunday'])]
+            'week_day' => ['required', Rule::in(['sunday','monday','tuesday','wednesday','thursday','friday','saturday'])]
+
         ];
     }
 }

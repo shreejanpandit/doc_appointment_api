@@ -38,7 +38,7 @@ class ScheduleController extends Controller
      */
     public function store(StoreScheduleRequest $request)
     {
-        if ($request->user()->cannot('create',ScheduleController::class)){
+        if ($request->user()->cannot('create',Schedule::class)){
             return response()->json(['message'=>'Unauthorized to create with your role'],403);
         }
         auth()->user()->doctor->schedules()->create($request->validated());

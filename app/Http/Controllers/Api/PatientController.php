@@ -31,7 +31,12 @@ class PatientController extends Controller
      */
     public function store(StorePatientRequest $request)
     {
-        //
+        if ($request->user()->cannot('create',Patient::class)){
+            return response()->json(['message'=>'Unauthorized to create with your role'],403);
+        }
+        $patient = $request->user()->patient()->firstOrCreate($request->validated());
+
+        return response()->json(['message'=>'patient created','patient'=>$patient],201);
     }
 
     /**
@@ -39,7 +44,8 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        //
+        return response()->json(['patient'=>$patient],200);
+
     }
 
     /**
@@ -55,7 +61,13 @@ class PatientController extends Controller
      */
     public function update(UpdatePatientRequest $request, Patient $patient)
     {
-        //
+        if ($request->user()->cannot('update',$patient)){
+            return response()->json(['message'=>'Unauthorized to update with your role'],403);
+        }
+
+        $patient->update($request->validated());
+        return response()->json(['message'=>'patient updated'],201);
+
     }
 
     /**
@@ -63,6 +75,11 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        //
+        if (auth()->user()->cannot('delete',$patient)){
+            return response()->json(['message'=>'Unauthorized to delete with your role'],403);
+        }
+        $patient->delete();
+        return response()->json(['message'=>'patient deleted successfully'],200);
+
     }
 }
