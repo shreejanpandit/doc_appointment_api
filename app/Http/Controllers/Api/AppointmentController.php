@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Patient;
-use App\Http\Requests\StorePatientRequest;
-use App\Http\Requests\UpdatePatientRequest;
+use App\Http\Controllers\Controller;
 
-class PatientController extends Controller
+use App\Models\Appointment;
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Http\Requests\UpdateAppointmentRequest;
+
+class AppointmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +29,7 @@ class PatientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePatientRequest $request)
+    public function store(StoreAppointmentRequest $request)
     {
         //
     }
@@ -35,7 +37,7 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
+    public function show(Appointment $appointment)
     {
         //
     }
@@ -43,7 +45,7 @@ class PatientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Patient $patient)
+    public function edit(Appointment $appointment)
     {
         //
     }
@@ -51,7 +53,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePatientRequest $request, Patient $patient)
+    public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
         //
     }
@@ -59,7 +61,7 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy(Appointment $appointment)
     {
         //
     }

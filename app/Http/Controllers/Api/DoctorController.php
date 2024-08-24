@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Http\Requests\StoreDoctorRequest;
 use App\Http\Requests\UpdateDoctorRequest;
@@ -13,7 +14,15 @@ class DoctorController extends Controller
      */
     public function index()
     {
-        //
+        if (request()->filled('department_id')){
+            request()->validate(['department_id'=> 'exists:department,id']);
+            $doctors = Doctor::where('department_id', request('department_id'))->get();
+        }
+        else{
+            $doctors = Doctor::all();
+        }
+        return $doctors;
+
     }
 
     /**
@@ -29,7 +38,8 @@ class DoctorController extends Controller
      */
     public function store(StoreDoctorRequest $request)
     {
-        //
+       $request->user()->doctor()->firstOrCreate($request->validated());
+       return response()->json(['message'=>'doctor created'],201);
     }
 
     /**
@@ -37,7 +47,7 @@ class DoctorController extends Controller
      */
     public function show(Doctor $doctor)
     {
-        //
+        return response()->json(['doctor'=>$doctor],200);
     }
 
     /**
@@ -53,7 +63,9 @@ class DoctorController extends Controller
      */
     public function update(UpdateDoctorRequest $request, Doctor $doctor)
     {
-        //
+       $doctor->update($request->validated());
+        return response()->json(['message'=>'doctor updated'],201);
+
     }
 
     /**
@@ -61,6 +73,8 @@ class DoctorController extends Controller
      */
     public function destroy(Doctor $doctor)
     {
-        //
+        $doctor->delete();
+        return response()->json(['message'=>'doctor deleted successfully'],200);
+
     }
 }

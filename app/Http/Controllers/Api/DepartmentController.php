@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Schedule;
-use App\Http\Requests\StoreScheduleRequest;
-use App\Http\Requests\UpdateScheduleRequest;
+use App\Http\Controllers\Controller;
 
-class ScheduleController extends Controller
+use App\Models\Department;
+use App\Http\Requests\StoreDepartmentRequest;
+use App\Http\Requests\UpdateDepartmentRequest;
+
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +29,7 @@ class ScheduleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreScheduleRequest $request)
+    public function store(StoreDepartmentRequest $request)
     {
         //
     }
@@ -35,7 +37,7 @@ class ScheduleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Schedule $schedule)
+    public function show(Department $department)
     {
         //
     }
@@ -43,7 +45,7 @@ class ScheduleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Schedule $schedule)
+    public function edit(Department $department)
     {
         //
     }
@@ -51,7 +53,7 @@ class ScheduleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateScheduleRequest $request, Schedule $schedule)
+    public function update(UpdateDepartmentRequest $request, Department $department)
     {
         //
     }
@@ -59,7 +61,7 @@ class ScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Schedule $schedule)
+    public function destroy(Department $department)
     {
         //
     }
