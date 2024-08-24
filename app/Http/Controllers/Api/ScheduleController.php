@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use App\Models\Doctor;
 use App\Models\Schedule;
 use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Requests\UpdateScheduleRequest;
@@ -15,7 +16,13 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        //
+
+        if (auth()->user()->doctor) {
+            return auth()->user()->doctor->schedules()->get();
+        }
+
+        return response()->json(['message' => 'Schedule not found'], 404);
+
     }
 
     /**
@@ -31,7 +38,11 @@ class ScheduleController extends Controller
      */
     public function store(StoreScheduleRequest $request)
     {
-        //
+        if ($request->user()->cannot('create',ScheduleController::class)){
+            return response()->json(['message'=>'Unauthorized to create with your role'],403);
+        }
+        auth()->user()->doctor->schedules()->create($request->validated());
+        return response()->json(['message' => 'Schedule Created'], 201);
     }
 
     /**
@@ -47,7 +58,8 @@ class ScheduleController extends Controller
      */
     public function edit(Schedule $schedule)
     {
-        //
+        return response()->json(['schedule' => $schedule], 200);
+
     }
 
     /**
@@ -55,7 +67,12 @@ class ScheduleController extends Controller
      */
     public function update(UpdateScheduleRequest $request, Schedule $schedule)
     {
-        //
+        if ($request->user()->cannot('update',$schedule)){
+            return response()->json(['message'=>'Unauthorized to update with your role'],403);
+        }
+
+        $schedule->update($request->validated());
+        return response()->json(['message' => 'Schedule Updated'], 200);
     }
 
     /**
@@ -63,6 +80,10 @@ class ScheduleController extends Controller
      */
     public function destroy(Schedule $schedule)
     {
-        //
+        if (auth()->user()->cannot('delete',$schedule)){
+            return response()->json(['message'=>'Unauthorized to delete with your role'],403);
+        }
+        $schedule->delete();
+        return response()->json(['message' => 'Schedule Deleted'], 200);
     }
 }

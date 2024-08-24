@@ -12,5 +12,6 @@ require __DIR__ . '/auth.php';
 //Doctor routes
 
 Route::apiResource('doctors', DoctorController::class, )->middleware('auth:sanctum');
+Route::apiResource('schedules', \App\Http\Controllers\Api\ScheduleController::class, )->middleware('auth:sanctum');
 
 //patient api routes

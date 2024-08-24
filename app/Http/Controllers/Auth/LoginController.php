@@ -34,7 +34,7 @@ class LoginController extends Controller
         // Determine redirect or response based on user role
         if ($role === 'patient') {
             return response()->json(array_merge($data, [
-                'redirect_url' => route('patient.dashboard'),
+//                'redirect_url' => route('patient.dashboard'),
                 'status' => [
                     'message' => 'Patient Login successfully',
                     'type' => 'success'
@@ -44,7 +44,7 @@ class LoginController extends Controller
 
         if ($role === 'doctor') {
             return response()->json(array_merge($data, [
-                'redirect_url' => route('doctor.dashboard'),
+//                'redirect_url' => route('doctor.dashboard'),
                 'status' => [
                     'message' => 'Doctor Login successfully',
                     'type' => 'success'
@@ -54,7 +54,7 @@ class LoginController extends Controller
 
         if ($role === 'admin') {
             return response()->json(array_merge($data, [
-                'redirect_url' => route('admin.dashboard'),
+//                'redirect_url' => route('admin.dashboard'),
                 'status' => [
                     'message' => 'Admin Login successfully',
                     'type' => 'success'
