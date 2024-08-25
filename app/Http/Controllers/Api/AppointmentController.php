@@ -15,7 +15,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        //
+        return auth()->user()->patient->appointments()->get();
     }
 
     /**
@@ -31,7 +31,13 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request)
     {
-        //
+        if ($request->user()->cannot('create',Appointment::class)){
+            return response()->json(['message'=>'Unauthorized to create with your role'],403);
+        }
+
+        $request->user()->patient->appointments()->create($request->validated());
+
+        return response()->json(['message'=>'Appointment created successfully'],201);
     }
 
     /**
@@ -39,7 +45,7 @@ class AppointmentController extends Controller
      */
     public function show(Appointment $appointment)
     {
-        //
+        return response()->json(['appointment' => $appointment], 200);
     }
 
     /**
@@ -55,7 +61,14 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
-        //
+        if ($request->user()->cannot('update',$appointment)){
+            return response()->json(['message'=>'Unauthorized to update with your role'],403);
+        }
+
+        $appointment->update($request->validated());
+
+        return response()->json(['message'=>'Appointment updated successfully'],201);
+
     }
 
     /**
@@ -63,6 +76,11 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        //
+        if (auth()->user()->cannot('delete',$appointment)){
+            return response()->json(['message'=>'Unauthorized to delete with your role'],403);
+        }
+
+        $appointment->delete();
+        return response()->json(['message'=>'Appointment deleted successfully'],200);
     }
 }

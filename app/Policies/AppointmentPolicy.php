@@ -29,7 +29,7 @@ class AppointmentPolicy
      */
     public function create(User $user): bool
     {
-        //
+       return $user->hasRole('patient') && !empty($user->patient);
     }
 
     /**
@@ -37,7 +37,7 @@ class AppointmentPolicy
      */
     public function update(User $user, Appointment $appointment): bool
     {
-        //
+        return $user->hasRole('patient') && $user->patient->id === $appointment->patient_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class AppointmentPolicy
      */
     public function delete(User $user, Appointment $appointment): bool
     {
-        //
+        return $user->hasRole('patient') && $user->patient->id === $appointment->patient_id;
     }
 
     /**

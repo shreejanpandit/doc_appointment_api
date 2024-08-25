@@ -41,7 +41,8 @@ class ScheduleController extends Controller
         if ($request->user()->cannot('create',Schedule::class)){
             return response()->json(['message'=>'Unauthorized to create with your role'],403);
         }
-        auth()->user()->doctor->schedules()->create($request->validated());
+
+        auth()->user()->doctor->schedules()->firstOrCreate(['week_day' => $request->week_day,'start_time' => $request->start_time,'end_time' => $request->end_time],$request->validated());
         return response()->json(['message' => 'Schedule Created'], 201);
     }
 
@@ -50,7 +51,7 @@ class ScheduleController extends Controller
      */
     public function show(Schedule $schedule)
     {
-        //
+        return response()->json(['schedule' => $schedule], 200);
     }
 
     /**

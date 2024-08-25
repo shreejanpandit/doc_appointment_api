@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\PatientController;
+use App\Http\Controllers\Api\AppointmentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,5 +17,6 @@ require __DIR__ . '/auth.php';
 Route::apiResource('doctors', DoctorController::class, )->middleware('auth:sanctum');
 Route::apiResource('schedules', ScheduleController::class, )->middleware('auth:sanctum');
 Route::apiResource('patients', PatientController::class, )->middleware('auth:sanctum');
+Route::apiResource('appointments', AppointmentController::class, )->middleware('auth:sanctum');
 
 //patient api routes

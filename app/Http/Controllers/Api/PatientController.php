@@ -34,7 +34,7 @@ class PatientController extends Controller
         if ($request->user()->cannot('create',Patient::class)){
             return response()->json(['message'=>'Unauthorized to create with your role'],403);
         }
-        $patient = $request->user()->patient()->firstOrCreate($request->validated());
+        $patient = $request->user()->patient()->firstOrCreate(['user_id' => auth()->id],$request->validated());
 
         return response()->json(['message'=>'patient created','patient'=>$patient],201);
     }

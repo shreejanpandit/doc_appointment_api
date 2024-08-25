@@ -51,7 +51,7 @@ class DoctorController extends Controller
      */
     public function show(Doctor $doctor)
     {
-        return response()->json(['doctor'=>$doctor],200);
+        return response()->json(['doctor'=>$doctor->load('schedules')],200);
     }
 
     /**
