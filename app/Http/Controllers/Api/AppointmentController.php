@@ -15,7 +15,11 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        return auth()->user()->patient->appointments()->get();
+        if (auth()->user()->hasRole('patient')) {
+            return auth()->user()->patient->appointments()->get();
+        }
+
+        return auth()->user()->doctor->appointments()->get();
     }
 
     /**
