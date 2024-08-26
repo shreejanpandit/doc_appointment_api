@@ -38,9 +38,9 @@ class DoctorController extends Controller
      */
     public function store(StoreDoctorRequest $request)
     {
-        if ($request->user()->cannot('create',Doctor::class)){
-            return response()->json(['message'=>'Unauthorized to create with your role'],403);
-        }
+//        if ($request->user()->cannot('create',Doctor::class)){
+//            return response()->json(['message'=>'Unauthorized to create with your role'],403);
+//        }
        $doctor = $request->user()->doctor()->firstOrCreate($request->validated());
 
        return response()->json(['message'=>'doctor created','doctor'=>$doctor],201);
@@ -67,9 +67,9 @@ class DoctorController extends Controller
      */
     public function update(UpdateDoctorRequest $request, Doctor $doctor)
     {
-        if ($request->user()->cannot('update',$doctor)){
-            return response()->json(['message'=>'Unauthorized to update with your role'],403);
-        }
+//        if ($request->user()->cannot('update',$doctor)){
+//            return response()->json(['message'=>'Unauthorized to update with your role'],403);
+//        }
 
        $doctor->update($request->validated());
         return response()->json(['message'=>'doctor updated'],201);
@@ -81,9 +81,9 @@ class DoctorController extends Controller
      */
     public function destroy(Doctor $doctor)
     {
-        if (auth()->user()->cannot('delete',$doctor)){
-            return response()->json(['message'=>'Unauthorized to delete with your role'],403);
-        }
+//        if (auth()->user()->cannot('delete',$doctor)){
+//            return response()->json(['message'=>'Unauthorized to delete with your role'],403);
+//        }
         $doctor->delete();
         return response()->json(['message'=>'doctor deleted successfully'],200);
 

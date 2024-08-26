@@ -9,7 +9,8 @@ class Doctor extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = ['user_id', 'department_id','contact', 'bio', 'image'];
+//    protected $guarded = [];
     public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Department::class);
