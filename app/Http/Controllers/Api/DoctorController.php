@@ -10,8 +10,50 @@ use App\Http\Requests\UpdateDoctorRequest;
 class DoctorController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/doctors",
+     *     summary="List all doctors",
+     *     description="Retrieve a list of doctors. Optionally, filter by department_id.",
+     *     tags={"Doctors"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="department_id",
+     *         in="query",
+     *         description="Filter doctors by department ID",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of doctor list",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="contact", type="string", example="1234567890"),
+     *                 @OA\Property(property="bio", type="string", example="Experienced cardiologist"),
+     *                 @OA\Property(property="department_id", type="integer", example=2),
+     *                 @OA\Property(property="image", type="string", example="doctor_image.jpg"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object",
+     *                 @OA\Property(property="department_id", type="array", @OA\Items(type="string", example="The selected department_id is invalid."))
+     *             )
+     *         )
+     *     )
+     * )
      */
+
+
     public function index()
     {
         if (request()->filled('department_id')){
@@ -34,8 +76,61 @@ class DoctorController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/doctors",
+     *     summary="Create a new doctor",
+     *     description="Store a new doctor record in the database.",
+     *     tags={"Doctors"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"contact", "bio", "department_id"},
+     *             @OA\Property(property="contact", type="string", example="1234567890"),
+     *             @OA\Property(property="bio", type="string", example="Experienced cardiologist"),
+     *             @OA\Property(property="department_id", type="integer", example=2),
+     *             @OA\Property(property="image", type="string", example="doctor_image.jpg")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Doctor successfully created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="doctor created"),
+     *             @OA\Property(property="doctor", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="contact", type="string", example="1234567890"),
+     *                 @OA\Property(property="bio", type="string", example="Experienced cardiologist"),
+     *                 @OA\Property(property="department_id", type="integer", example=2),
+     *                 @OA\Property(property="image", type="string", example="doctor_image.jpg"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized to create with your role"),
+     *             @OA\Property(property="type", type="string", example="error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object",
+     *                 @OA\Property(property="contact", type="array", @OA\Items(type="string", example="The contact field is required.")),
+     *                 @OA\Property(property="bio", type="array", @OA\Items(type="string", example="The bio field is required.")),
+     *                 @OA\Property(property="department_id", type="array", @OA\Items(type="string", example="The selected department_id is invalid."))
+     *             )
+     *         )
+     *     )
+     * )
      */
+
     public function store(StoreDoctorRequest $request)
     {
         if ($request->user()->cannot('create',Doctor::class)){
@@ -47,7 +142,49 @@ class DoctorController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/doctors/{id}",
+     *     summary="Get a specific doctor",
+     *     description="Retrieve details of a specific doctor including their schedules.",
+     *     tags={"Doctors"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the doctor to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of doctor details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="doctor", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="contact", type="string", example="1234567890"),
+     *                 @OA\Property(property="bio", type="string", example="Experienced cardiologist"),
+     *                 @OA\Property(property="department_id", type="integer", example=2),
+     *                 @OA\Property(property="image", type="string", example="doctor_image.jpg"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="schedules", type="array", @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="schedule_time", type="string", example="09:00:00"),
+     *                     @OA\Property(property="appointment_id", type="integer", example=1)
+     *                 ))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Doctor not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Doctor not found"),
+     *             @OA\Property(property="type", type="string", example="error")
+     *         )
+     *     )
+     * )
      */
     public function show(Doctor $doctor)
     {
@@ -63,7 +200,57 @@ class DoctorController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/doctors/{id}",
+     *     summary="Update a specific doctor",
+     *     description="Update details of a specific doctor.",
+     *     tags={"Doctors"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the doctor to update",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"contact", "bio", "department_id"},
+     *             @OA\Property(property="contact", type="string", example="1234567890"),
+     *             @OA\Property(property="bio", type="string", example="Experienced cardiologist"),
+     *             @OA\Property(property="department_id", type="integer", example=2),
+     *             @OA\Property(property="image", type="string", example="doctor_image.jpg")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Doctor successfully updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="doctor updated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized to update with your role"),
+     *             @OA\Property(property="type", type="string", example="error")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object",
+     *                 @OA\Property(property="contact", type="array", @OA\Items(type="string", example="The contact field is required.")),
+     *                 @OA\Property(property="bio", type="array", @OA\Items(type="string", example="The bio field is required.")),
+     *                 @OA\Property(property="department_id", type="array", @OA\Items(type="string", example="The selected department_id is invalid."))
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function update(UpdateDoctorRequest $request, Doctor $doctor)
     {
@@ -77,7 +264,35 @@ class DoctorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/doctors/{id}",
+     *     summary="Delete a specific doctor",
+     *     description="Remove a specific doctor from the database.",
+     *     tags={"Doctors"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the doctor to delete",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Doctor successfully deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="doctor deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized to delete with your role"),
+     *             @OA\Property(property="type", type="string", example="error")
+     *         )
+     *     )
+     * )
      */
     public function destroy(Doctor $doctor)
     {
